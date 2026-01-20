@@ -92,6 +92,10 @@ const AppContent: React.FC = () => {
     setToast({ xp, message: action });
   };
 
+  const handleAvatarUpdate = (newUrl: string) => {
+    setFarcasterUser(prev => prev ? { ...prev, pfpUrl: newUrl } : { username: 'Explorer', pfpUrl: newUrl });
+  };
+
   const renderContent = () => {
     switch (activeTab) {
       case Tab.SWAP:
@@ -110,6 +114,7 @@ const AppContent: React.FC = () => {
             authState={authState}
             onLogin={(token) => setAuthState({ isAuthenticated: true, token })}
             onLogout={() => setAuthState({ isAuthenticated: false, token: null })}
+            onAvatarUpdate={handleAvatarUpdate}
           />
         );
       default:
@@ -123,7 +128,7 @@ const AppContent: React.FC = () => {
       return {
         ...u,
         username: farcasterUser?.username || 'You',
-        avatar: farcasterUser?.pfpUrl ? <img src={farcasterUser.pfpUrl} className="w-full h-full rounded-full" alt="me" /> : '👤',
+        avatar: farcasterUser?.pfpUrl ? <img src={farcasterUser.pfpUrl} className="w-full h-full rounded-full object-cover" alt="me" /> : '👤',
         xp: xpState.currentXP + (xpState.level * 1000)
       };
     }

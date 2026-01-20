@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { sdk } from '@farcaster/miniapp-sdk';
 import { Bell, Shield, LogOut, User, CheckCircle, Zap, ExternalLink, Copy, Camera, Image as ImageIcon, X } from 'lucide-react';
 import { Card } from './ui/Card';
@@ -11,6 +11,7 @@ interface ProfileProps {
   authState: AuthState;
   onLogin: (token: string) => void;
   onLogout: () => void;
+  onAvatarUpdate: (url: string) => void;
 }
 
 const DEFAULT_AVATARS = [
@@ -22,7 +23,7 @@ const DEFAULT_AVATARS = [
   { id: '6', type: 'emoji', content: '🐸', color: 'bg-emerald-500/20' },
 ];
 
-export const Profile: React.FC<ProfileProps> = ({ user, xpState, authState, onLogin, onLogout }) => {
+export const Profile: React.FC<ProfileProps> = ({ user, xpState, authState, onLogin, onLogout, onAvatarUpdate }) => {
   const [notifStatus, setNotifStatus] = useState<'idle' | 'enabled' | 'error'>('idle');
   const [notifToken, setNotifToken] = useState<string | null>(null);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
@@ -31,6 +32,13 @@ export const Profile: React.FC<ProfileProps> = ({ user, xpState, authState, onLo
   const [currentAvatar, setCurrentAvatar] = useState<string | null>(user?.pfpUrl || null);
   const [showAvatarSelector, setShowAvatarSelector] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Sync avatar if it changes from parent (e.g. initial load)
+  useEffect(() => {
+    if (user?.pfpUrl) {
+      setCurrentAvatar(user.pfpUrl);
+    }
+  }, [user?.pfpUrl]);
 
   const handleSignIn = async () => {
     setIsAuthenticating(true);
@@ -67,7 +75,9 @@ export const Profile: React.FC<ProfileProps> = ({ user, xpState, authState, onLo
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setCurrentAvatar(reader.result as string);
+        const result = reader.result as string;
+        setCurrentAvatar(result);
+        onAvatarUpdate(result);
         setShowAvatarSelector(false);
       };
       reader.readAsDataURL(file);
@@ -79,6 +89,7 @@ export const Profile: React.FC<ProfileProps> = ({ user, xpState, authState, onLo
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${emoji}</text></svg>`;
     const dataUri = `data:image/svg+xml;base64,${btoa(svg)}`;
     setCurrentAvatar(dataUri);
+    onAvatarUpdate(dataUri);
     setShowAvatarSelector(false);
   };
 
