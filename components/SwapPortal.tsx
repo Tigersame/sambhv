@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { ArrowDownUp, TrendingUp, Wallet, Clock, Settings, RefreshCw, Zap } from 'lucide-react';
+import { ArrowDownUp, TrendingUp, Wallet, Clock, Settings, RefreshCw, Zap, CheckCircle, Share2, ArrowRight } from 'lucide-react';
+import { useComposeCast } from '@coinbase/onchainkit/minikit';
 import { Card } from './ui/Card';
 import { Button } from './ui/Button';
 import { TOKENS, CHART_DATA } from '../services/mockData';
@@ -8,18 +9,23 @@ import { Token, ChartPoint } from '../types';
 
 interface SwapProps {
   onInteract: (xp: number, action: string) => void;
+  user: { username?: string; pfpUrl?: string } | null;
 }
 
-export const SwapPortal: React.FC<SwapProps> = ({ onInteract }) => {
+export const SwapPortal: React.FC<SwapProps> = ({ onInteract, user }) => {
   const [mode, setMode] = useState<'market' | 'limit'>('market');
   const [tokenIn, setTokenIn] = useState<Token>(TOKENS[0]);
   const [tokenOut, setTokenOut] = useState<Token>(TOKENS[1]);
   const [amount, setAmount] = useState<string>('');
   const [isSwapping, setIsSwapping] = useState(false);
+  const [swapSuccess, setSwapSuccess] = useState(false);
+  const [isShared, setIsShared] = useState(false);
   
   // Live Data Simulation
   const [chartData, setChartData] = useState<ChartPoint[]>(CHART_DATA);
   const [currentPrice, setCurrentPrice] = useState(tokenIn.price);
+
+  const { composeCast } = useComposeCast();
 
   useEffect(() => {
     // Simulate live price updates
@@ -48,10 +54,87 @@ export const SwapPortal: React.FC<SwapProps> = ({ onInteract }) => {
     setIsSwapping(true);
     setTimeout(() => {
       setIsSwapping(false);
+      setSwapSuccess(true);
       onInteract(mode === 'market' ? 50 : 75, `${mode === 'market' ? 'Swapped' : 'Limit Order'} ${tokenIn.symbol} -> ${tokenOut.symbol}`);
-      setAmount('');
     }, 1500);
   };
+
+  const handleShare = () => {
+    const username = user?.username || 'Explorer';
+    const actionText = `Swapped ${amount} ${tokenIn.symbol} to ${tokenOut.symbol}`;
+    
+    // Generate a dynamic image URL with user details
+    // We add a timestamp to prevent caching of the image
+    const timestamp = Date.now();
+    const imageText = encodeURIComponent(`SAMBV TRADE\n\n${actionText}\n\nExecuted by @${username}`);
+    
+    // In a real production app, you would pass the pfpUrl to your OG image generation service
+    // e.g., https://my-og-service.com/api/swap?user=${username}&avatar=${encodeURIComponent(user?.pfpUrl || '')}&amount=${amount}...
+    // For this demo, we use placehold.co and document the avatar intent via query param
+    const shareImageUrl = `https://placehold.co/1200x630/0052FF/FFFFFF/png?text=${imageText}&ts=${timestamp}&avatar=${encodeURIComponent(user?.pfpUrl || '')}`;
+
+    composeCast({
+      text: `Just executed a trade on SAMBV ⚡️\n\n${amount} ${tokenIn.symbol} ➡️ ${tokenOut.symbol}\n\nBuild your portfolio on Base 👇`,
+      embeds: [shareImageUrl, 'https://sambv.app']
+    });
+
+    if (!isShared) {
+      onInteract(50, 'Shared Trade');
+      setIsShared(true);
+    }
+  };
+
+  const resetSwap = () => {
+    setSwapSuccess(false);
+    setAmount('');
+    setIsShared(false);
+  };
+
+  if (swapSuccess) {
+    return (
+      <div className="flex flex-col items-center justify-center py-10 space-y-6 animate-in fade-in zoom-in-95 duration-300">
+        <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(34,197,94,0.4)]">
+          <CheckCircle size={48} className="text-white" />
+        </div>
+        
+        <div className="text-center space-y-2">
+          <h2 className="text-2xl font-bold text-white">Transaction Successful</h2>
+          <p className="text-slate-400">
+            You {mode === 'limit' ? 'placed an order for' : 'swapped'} <span className="text-white font-bold">{amount} {tokenIn.symbol}</span> for <span className="text-white font-bold">~{(Number(amount) * (currentPrice / tokenOut.price)).toFixed(4)} {tokenOut.symbol}</span>
+          </p>
+        </div>
+
+        <Card className="p-4 bg-slate-800/50 w-full">
+           <div className="flex justify-between items-center text-sm mb-2">
+             <span className="text-slate-500">Status</span>
+             <span className="text-green-400 font-bold">Confirmed</span>
+           </div>
+           <div className="flex justify-between items-center text-sm">
+             <span className="text-slate-500">Transaction Hash</span>
+             <span className="text-base-blue font-mono text-xs">0x71...9A2</span>
+           </div>
+        </Card>
+
+        <div className="flex gap-3 w-full">
+          <Button onClick={resetSwap} variant="secondary" className="flex-1">
+            Done
+          </Button>
+          <Button 
+            onClick={handleShare} 
+            disabled={isShared}
+            className={`flex-1 ${isShared ? 'bg-slate-700' : 'bg-purple-600 hover:bg-purple-500'} relative group overflow-hidden transition-all`}
+          >
+             {!isShared && <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity" />}
+             <div className="relative flex items-center justify-center gap-2">
+                <Share2 size={18} /> 
+                {isShared ? 'Shared' : 'Share'}
+                {!isShared && <span className="bg-white/20 px-1.5 py-0.5 rounded text-[10px] font-bold">+50 XP</span>}
+             </div>
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4 pb-20">

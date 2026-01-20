@@ -41,8 +41,7 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     const init = async () => {
       try {
-        // Disable native gestures to prevent conflict with charts/swipes
-        await sdk.actions.ready({ disableNativeGestures: true });
+        await sdk.actions.ready();
         
         // Check local storage for onboarding
         const hasOnboarded = localStorage.getItem('sambv_onboarded');
@@ -99,11 +98,11 @@ const AppContent: React.FC = () => {
   const renderContent = () => {
     switch (activeTab) {
       case Tab.SWAP:
-        return <SwapPortal onInteract={handleInteraction} />;
+        return <SwapPortal onInteract={handleInteraction} user={farcasterUser} />;
       case Tab.EARN:
         return <EarnVault onInteract={handleInteraction} />;
       case Tab.LAUNCH:
-        return <TokenLauncher onInteract={handleInteraction} />;
+        return <TokenLauncher onInteract={handleInteraction} user={farcasterUser} />;
       case Tab.PORTFOLIO:
         return <Portfolio isConnected={!!walletAddress} onConnect={handleConnectWallet} />;
       case Tab.PROFILE:
@@ -118,7 +117,7 @@ const AppContent: React.FC = () => {
           />
         );
       default:
-        return <SwapPortal onInteract={handleInteraction} />;
+        return <SwapPortal onInteract={handleInteraction} user={farcasterUser} />;
     }
   };
 

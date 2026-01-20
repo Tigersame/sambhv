@@ -6,13 +6,15 @@ import { Button } from './ui/Button';
 
 interface LauncherProps {
   onInteract: (xp: number, action: string) => void;
+  user: { username?: string; pfpUrl?: string } | null;
 }
 
-export const TokenLauncher: React.FC<LauncherProps> = ({ onInteract }) => {
+export const TokenLauncher: React.FC<LauncherProps> = ({ onInteract, user }) => {
   const [name, setName] = useState('');
   const [ticker, setTicker] = useState('');
   const [loading, setLoading] = useState(false);
   const [deployedToken, setDeployedToken] = useState<string | null>(null);
+  const [isShared, setIsShared] = useState(false);
   
   const { composeCast } = useComposeCast();
 
@@ -23,6 +25,7 @@ export const TokenLauncher: React.FC<LauncherProps> = ({ onInteract }) => {
       setLoading(false);
       onInteract(500, `Deployed Token: $${ticker}`);
       setDeployedToken(ticker);
+      setIsShared(false);
       setName('');
       setTicker('');
     }, 2000);
@@ -31,13 +34,26 @@ export const TokenLauncher: React.FC<LauncherProps> = ({ onInteract }) => {
   const handleShare = () => {
     if (!deployedToken) return;
     
+    const username = user?.username || 'Builder';
+    
+    // Generate Dynamic Share Image URL
+    // We add timestamp and avatar to the URL to simulate a real dynamic image service
+    const timestamp = Date.now();
+    const imageText = encodeURIComponent(`LAUNCHED $${deployedToken} 🚀\n\nDeployed by @${username}\nvia SAMBV on Base`);
+    
+    // Construct the URL with query params for a hypothetical generator, falling back to placehold.co's text rendering
+    const shareImageUrl = `https://placehold.co/1200x630/9333ea/FFFFFF/png?text=${imageText}&ts=${timestamp}&avatar=${encodeURIComponent(user?.pfpUrl || '')}`;
+
     // Viral Loop using OnchainKit useComposeCast
     composeCast({
       text: `Just deployed $${deployedToken} on Base with one click! 🚀\n\nLaunch your own token in seconds 👇`,
-      embeds: ['https://sambv.app'] // In production, use dynamic URL e.g. https://sambv.app/share/token/${deployedToken}
+      embeds: [shareImageUrl, 'https://sambv.app']
     });
     
-    onInteract(50, 'Shared Launch');
+    if (!isShared) {
+      onInteract(100, 'Shared Launch');
+      setIsShared(true);
+    }
   };
 
   if (deployedToken) {
@@ -60,8 +76,17 @@ export const TokenLauncher: React.FC<LauncherProps> = ({ onInteract }) => {
           <Button onClick={() => setDeployedToken(null)} variant="secondary" className="flex-1">
             Launch Another
           </Button>
-          <Button onClick={handleShare} className="flex-1 bg-purple-600 hover:bg-purple-500">
-            <Share2 size={18} /> Share
+          <Button 
+            onClick={handleShare} 
+            disabled={isShared}
+            className={`flex-1 ${isShared ? 'bg-slate-700' : 'bg-purple-600 hover:bg-purple-500'} relative group overflow-hidden transition-all`}
+          >
+             {!isShared && <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity" />}
+             <div className="relative flex items-center justify-center gap-2">
+                <Share2 size={18} /> 
+                {isShared ? 'Shared' : 'Share'}
+                {!isShared && <span className="bg-white/20 px-1.5 py-0.5 rounded text-[10px] font-bold">+100 XP</span>}
+             </div>
           </Button>
         </div>
       </div>
