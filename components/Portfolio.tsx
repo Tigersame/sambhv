@@ -1,17 +1,46 @@
 import React from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { Shield, TrendingUp, History, Activity } from 'lucide-react';
+import { Shield, TrendingUp, History, Activity, Wallet, Lock } from 'lucide-react';
 import { Card } from './ui/Card';
+import { Button } from './ui/Button';
 import { TOKENS } from '../services/mockData';
 
 const COLORS = ['#0052FF', '#38bdf8', '#818cf8', '#6366f1'];
 
-export const Portfolio: React.FC = () => {
+interface PortfolioProps {
+  isConnected?: boolean;
+  onConnect?: () => void;
+}
+
+export const Portfolio: React.FC<PortfolioProps> = ({ isConnected = false, onConnect }) => {
   const totalBalance = TOKENS.reduce((acc, t) => acc + (t.balance * t.price), 0);
   const data = TOKENS.map(t => ({ name: t.symbol, value: t.balance * t.price }));
 
+  if (!isConnected) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[60vh] text-center space-y-6 animate-in fade-in zoom-in-95 duration-300">
+        <div className="bg-slate-800/50 p-6 rounded-full ring-1 ring-slate-700 shadow-2xl shadow-base-blue/10">
+          <Wallet size={48} className="text-slate-400" />
+        </div>
+        <div className="space-y-2 max-w-xs">
+          <h2 className="text-2xl font-bold text-white">Connect Wallet</h2>
+          <p className="text-slate-400 text-sm">
+            Connect your Ethereum-compatible wallet to track your portfolio, view history, and analyze your net worth.
+          </p>
+        </div>
+        <Button onClick={onConnect} size="lg" className="w-full max-w-xs shadow-xl shadow-base-blue/20">
+          Connect Wallet
+        </Button>
+        <div className="flex gap-4 text-xs text-slate-500">
+          <span className="flex items-center gap-1"><Shield size={10} /> Secure</span>
+          <span className="flex items-center gap-1"><Lock size={10} /> Private</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6 pb-20">
+    <div className="space-y-6 pb-20 animate-in slide-in-from-bottom-4 duration-500">
       {/* Net Worth Header */}
       <div className="text-center space-y-1">
         <p className="text-slate-400 text-sm">Net Worth</p>
@@ -24,7 +53,7 @@ export const Portfolio: React.FC = () => {
 
       {/* Analytics Badge */}
       <div className="flex justify-center">
-        <div className="flex items-center gap-2 bg-gradient-to-r from-purple-900/50 to-blue-900/50 border border-purple-500/30 px-4 py-1.5 rounded-full">
+        <div className="flex items-center gap-2 bg-gradient-to-r from-purple-900/50 to-blue-900/50 border border-purple-500/30 px-4 py-1.5 rounded-full shadow-lg shadow-purple-900/20">
           <Shield size={14} className="text-purple-400" />
           <span className="text-xs font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-200 to-blue-200">
             Smart Money Label: Diamond Hand
@@ -67,7 +96,7 @@ export const Portfolio: React.FC = () => {
       <div className="space-y-3">
         <h3 className="text-sm font-semibold text-slate-300 px-1">Onchain Activity</h3>
         {[1, 2, 3].map((i) => (
-          <Card key={i} className="p-3 flex items-center justify-between">
+          <Card key={i} className="p-3 flex items-center justify-between hover:bg-slate-800/50 transition-colors">
             <div className="flex items-center gap-3">
               <div className="bg-slate-800 p-2 rounded-lg text-slate-400">
                 {i % 2 === 0 ? <Activity size={16} /> : <History size={16} />}

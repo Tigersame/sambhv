@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>SAMBV - Base Super App</title>
+    
+    <!-- Base Mini App Metadata -->
+    <meta name="fc:miniapp" content='{"version":"next","imageUrl":"https://placehold.co/600x400/0052FF/FFFFFF/png?text=SAMBV+Preview","button":{"title":"Launch SAMBV","action":{"type":"launch_frame","name":"SAMBV","url":"https://sambv.app","splashImageUrl":"https://placehold.co/200x200/0052FF/FFFFFF/png?text=S","splashBackgroundColor":"#0f172a"}}}' />
+    <!-- Frame Metadata for Feed Embeds -->
+    <meta name="fc:frame" content='{"version":"next","imageUrl":"https://placehold.co/600x400/0052FF/FFFFFF/png?text=SAMBV+Launch","button":{"title":"Launch App","action":{"type":"launch_frame","name":"SAMBV","url":"https://sambv.app","splashImageUrl":"https://placehold.co/200x200/0052FF/FFFFFF/png?text=S","splashBackgroundColor":"#0f172a"}}}' />
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -50,10 +56,19 @@
     "react": "https://esm.sh/react@^19.2.3",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "recharts": "https://esm.sh/recharts@^3.6.0",
-    "@farcaster/miniapp-sdk": "https://esm.sh/@farcaster/miniapp-sdk@^0.2.1"
+    "@farcaster/miniapp-sdk": "https://esm.sh/@farcaster/miniapp-sdk@^0.2.1",
+    "viem": "https://esm.sh/viem@2.21.0",
+    "viem/chains": "https://esm.sh/viem@2.21.0/chains",
+    "wagmi": "https://esm.sh/wagmi@2.12.0",
+    "@tanstack/react-query": "https://esm.sh/@tanstack/react-query@5.51.0",
+    "@coinbase/onchainkit": "https://esm.sh/@coinbase/onchainkit@0.33.4",
+    "@coinbase/onchainkit/minikit": "https://esm.sh/@coinbase/onchainkit@0.33.4/minikit",
+    "@coinbase/onchainkit/": "https://esm.sh/@coinbase/onchainkit@^1.1.2/",
+    "viem/": "https://esm.sh/viem@^2.44.4/"
   }
 }
 </script>
+<link href="https://esm.sh/@coinbase/onchainkit@0.33.4/styles.css" rel="stylesheet" />
 </head>
   <body>
     <div id="root"></div>

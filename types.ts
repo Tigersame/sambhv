@@ -1,3 +1,5 @@
+import React from 'react';
+
 export enum Tab {
   SWAP = 'swap',
   EARN = 'earn',
@@ -34,4 +36,18 @@ export interface XPState {
   currentXP: number;
   nextLevelXP: number;
   history: { action: string; xp: number; timestamp: number }[];
+}
+
+export interface LeaderboardUser {
+  rank: number;
+  username: string;
+  xp: number;
+  avatar: string | React.ReactNode;
+  isCurrentUser?: boolean;
+}
+
+export interface AuthState {
+  isAuthenticated: boolean;
+  token: string | null;
+  fid?: number;
 }

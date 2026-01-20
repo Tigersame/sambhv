@@ -1,0 +1,30 @@
+{
+  "accountAssociation": {
+    "header": "eyJmaWQiOjkxNTIsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHgwMmVmNzkwRGQ3OTkzQTM1ZkQ4NDdDMDUzRURkQUU5NDBEMDU1NTk2In0",
+    "payload": "eyJkb21haW4iOiJzYW1idi5hcHAifQ",
+    "signature": "MHg..."
+  },
+  "miniapp": {
+    "version": "1",
+    "name": "SAMBV",
+    "homeUrl": "https://sambv.app",
+    "iconUrl": "https://sambv.app/icon.png",
+    "splashImageUrl": "https://sambv.app/splash.png",
+    "splashBackgroundColor": "#0f172a",
+    "subtitle": "Super App for Base",
+    "description": "Swap, Earn, Launch, and Track your portfolio while earning XP on Base.",
+    "screenshotUrls": [
+      "https://sambv.app/screen1.png",
+      "https://sambv.app/screen2.png",
+      "https://sambv.app/screen3.png"
+    ],
+    "primaryCategory": "finance",
+    "tags": ["defi", "base", "portfolio", "swap"],
+    "heroImageUrl": "https://sambv.app/hero.png",
+    "tagline": "Your Gateway to Base",
+    "ogTitle": "SAMBV - Base Super App",
+    "ogDescription": "The ultimate Super App for Base. Swap, Earn, Launch, and Track.",
+    "ogImageUrl": "https://sambv.app/og.png",
+    "webhookUrl": "https://sambv.app/api/webhook"
+  }
+}

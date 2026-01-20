@@ -13,6 +13,7 @@ export const Navigation: React.FC<NavProps> = ({ activeTab, onTabChange }) => {
     { id: Tab.EARN, icon: Wallet, label: 'Earn' },
     { id: Tab.LAUNCH, icon: Rocket, label: 'Launch' },
     { id: Tab.PORTFOLIO, icon: Briefcase, label: 'Portfolio' },
+    { id: Tab.PROFILE, icon: User, label: 'Profile' },
   ];
 
   return (

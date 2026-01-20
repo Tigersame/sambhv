@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Upload, Rocket, Sparkles } from 'lucide-react';
+import { Upload, Rocket, Sparkles, Share2 } from 'lucide-react';
+import { useComposeCast } from '@coinbase/onchainkit/minikit';
 import { Card } from './ui/Card';
 import { Button } from './ui/Button';
 
@@ -11,6 +12,9 @@ export const TokenLauncher: React.FC<LauncherProps> = ({ onInteract }) => {
   const [name, setName] = useState('');
   const [ticker, setTicker] = useState('');
   const [loading, setLoading] = useState(false);
+  const [deployedToken, setDeployedToken] = useState<string | null>(null);
+  
+  const { composeCast } = useComposeCast();
 
   const handleLaunch = () => {
     if(!name || !ticker) return;
@@ -18,10 +22,51 @@ export const TokenLauncher: React.FC<LauncherProps> = ({ onInteract }) => {
     setTimeout(() => {
       setLoading(false);
       onInteract(500, `Deployed Token: $${ticker}`);
+      setDeployedToken(ticker);
       setName('');
       setTicker('');
     }, 2000);
   };
+
+  const handleShare = () => {
+    if (!deployedToken) return;
+    
+    // Viral Loop using OnchainKit useComposeCast
+    composeCast({
+      text: `Just deployed $${deployedToken} on Base with one click! 🚀\n\nLaunch your own token in seconds 👇`,
+      embeds: ['https://sambv.app'] // In production, use dynamic URL e.g. https://sambv.app/share/token/${deployedToken}
+    });
+    
+    onInteract(50, 'Shared Launch');
+  };
+
+  if (deployedToken) {
+    return (
+      <div className="space-y-6 pb-20 pt-10 text-center animate-in fade-in zoom-in-95">
+        <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(34,197,94,0.4)]">
+          <Rocket size={40} className="text-white" />
+        </div>
+        <h2 className="text-2xl font-bold text-white">Launch Successful!</h2>
+        <p className="text-slate-400">
+          <span className="font-bold text-white">${deployedToken}</span> is now live on Base.
+        </p>
+        
+        <Card className="p-4 bg-slate-800/50">
+           <p className="text-xs text-slate-500 mb-2">Contract Address</p>
+           <p className="font-mono text-sm text-base-blue break-all">0x71C95911E9a5D330f4D621842EC243EE1472E9A2</p>
+        </Card>
+
+        <div className="flex gap-3">
+          <Button onClick={() => setDeployedToken(null)} variant="secondary" className="flex-1">
+            Launch Another
+          </Button>
+          <Button onClick={handleShare} className="flex-1 bg-purple-600 hover:bg-purple-500">
+            <Share2 size={18} /> Share
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 pb-20">
