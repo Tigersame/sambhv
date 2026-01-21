@@ -252,8 +252,7 @@ const App: React.FC = () => {
   return (
     <OnchainKitProvider 
       chain={base}
-      miniKit={{ enabled: true }}
-      apiKey={'public_key'} // Placeholder, replace with real env var if needed
+      apiKey={(import.meta as any).env?.VITE_PUBLIC_ONCHAINKIT_API_KEY || 'public_key'}
     >
       <AppContent />
     </OnchainKitProvider>

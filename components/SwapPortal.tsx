@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useAccount, useBalance, useSendTransaction, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount, useBalance, useSendTransaction } from "wagmi";
 import { parseUnits, formatUnits } from "viem";
-import { ArrowDown, RefreshCcw, Settings, TrendingUp, Info, CheckCircle, XCircle, Loader2, Wallet } from "lucide-react";
+import { ArrowDown, Settings, TrendingUp, Info, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { get0xQuote, getTokenLogoCached } from "../services/swapService";
 import { SwapToken, TxItem } from "../types";
