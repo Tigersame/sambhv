@@ -1,7 +1,6 @@
 import React from 'react';
 
 export enum Tab {
-  SWAP = 'swap',
   EARN = 'earn',
   LAUNCH = 'launch',
   PORTFOLIO = 'portfolio',

@@ -3,7 +3,6 @@ import sdk from '@farcaster/miniapp-sdk';
 import { OnchainKitProvider } from '@coinbase/onchainkit';
 import { base } from 'viem/chains';
 import { Navigation } from './components/Navigation';
-import { SwapPortal } from './components/SwapPortal';
 import { Portfolio } from './components/Portfolio';
 import { TokenLauncher } from './components/TokenLauncher';
 import { EarnVault } from './components/EarnVault';
@@ -17,7 +16,7 @@ import { LEADERBOARD_DATA } from './services/mockData';
 import { Trophy, Loader2, User, ChevronRight, X } from 'lucide-react';
 
 const AppContent: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<Tab>(Tab.SWAP);
+  const [activeTab, setActiveTab] = useState<Tab>(Tab.EARN);
   const [toast, setToast] = useState<{ xp: number; message: string } | null>(null);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(true);
@@ -97,8 +96,6 @@ const AppContent: React.FC = () => {
 
   const renderContent = () => {
     switch (activeTab) {
-      case Tab.SWAP:
-        return <SwapPortal onInteract={handleInteraction} user={farcasterUser} />;
       case Tab.EARN:
         return <EarnVault onInteract={handleInteraction} />;
       case Tab.LAUNCH:
@@ -117,7 +114,7 @@ const AppContent: React.FC = () => {
           />
         );
       default:
-        return <SwapPortal onInteract={handleInteraction} user={farcasterUser} />;
+        return <EarnVault onInteract={handleInteraction} />;
     }
   };
 
@@ -127,7 +124,8 @@ const AppContent: React.FC = () => {
       return {
         ...u,
         username: farcasterUser?.username || 'You',
-        avatar: farcasterUser?.pfpUrl ? <img src={farcasterUser.pfpUrl} className="w-full h-full rounded-full object-cover" alt="me" /> : '👤',
+        // Now just passing the URL string if available, or fallback to emoji
+        avatar: farcasterUser?.pfpUrl || '👤',
         xp: xpState.currentXP + (xpState.level * 1000)
       };
     }

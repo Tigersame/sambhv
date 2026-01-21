@@ -20,10 +20,10 @@ export const CHART_DATA: ChartPoint[] = Array.from({ length: 50 }, (_, i) => ({
 }));
 
 export const LEADERBOARD_DATA: LeaderboardUser[] = [
-  { rank: 1, username: 'vitalik.eth', xp: 45000, avatar: '🦄' },
-  { rank: 2, username: 'jesse.xyz', xp: 32400, avatar: '🔵' },
-  { rank: 3, username: 'dwr.eth', xp: 28900, avatar: '🦉' },
-  { rank: 4, username: 'You', xp: 750, avatar: '👤', isCurrentUser: true },
-  { rank: 5, username: 'base.eth', xp: 500, avatar: '🛡️' },
-  { rank: 6, username: 'brian.eth', xp: 450, avatar: '🏦' },
+  { rank: 1, username: 'vitalik.eth', xp: 45000, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=vitalik' },
+  { rank: 2, username: 'jesse.xyz', xp: 32400, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=jesse' },
+  { rank: 3, username: 'dwr.eth', xp: 28900, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=dwr' },
+  { rank: 4, username: 'You', xp: 750, avatar: '', isCurrentUser: true },
+  { rank: 5, username: 'base.eth', xp: 500, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=base' },
+  { rank: 6, username: 'brian.eth', xp: 450, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=brian' },
 ];
