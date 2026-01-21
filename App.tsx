@@ -3,6 +3,7 @@ import sdk from '@farcaster/miniapp-sdk';
 import { OnchainKitProvider } from '@coinbase/onchainkit';
 import { base } from 'viem/chains';
 import { Navigation } from './components/Navigation';
+import { SwapPortal } from './components/SwapPortal';
 import { Portfolio } from './components/Portfolio';
 import { TokenLauncher } from './components/TokenLauncher';
 import { EarnVault } from './components/EarnVault';
@@ -16,7 +17,7 @@ import { LEADERBOARD_DATA } from './services/mockData';
 import { Trophy, Loader2, User, ChevronRight, X } from 'lucide-react';
 
 const AppContent: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<Tab>(Tab.EARN);
+  const [activeTab, setActiveTab] = useState<Tab>(Tab.SWAP);
   const [toast, setToast] = useState<{ xp: number; message: string } | null>(null);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(true);
@@ -96,6 +97,8 @@ const AppContent: React.FC = () => {
 
   const renderContent = () => {
     switch (activeTab) {
+      case Tab.SWAP:
+        return <SwapPortal onInteract={handleInteraction} />;
       case Tab.EARN:
         return <EarnVault onInteract={handleInteraction} />;
       case Tab.LAUNCH:
@@ -114,7 +117,7 @@ const AppContent: React.FC = () => {
           />
         );
       default:
-        return <EarnVault onInteract={handleInteraction} />;
+        return <SwapPortal onInteract={handleInteraction} />;
     }
   };
 

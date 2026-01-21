@@ -1,5 +1,5 @@
 import React from 'react';
-import { Briefcase, Rocket, Wallet, User } from 'lucide-react';
+import { Briefcase, Rocket, Wallet, User, ArrowRightLeft } from 'lucide-react';
 import { Tab } from '../types';
 
 interface NavProps {
@@ -9,6 +9,7 @@ interface NavProps {
 
 export const Navigation: React.FC<NavProps> = ({ activeTab, onTabChange }) => {
   const navItems = [
+    { id: Tab.SWAP, icon: ArrowRightLeft, label: 'Swap' },
     { id: Tab.EARN, icon: Wallet, label: 'Earn' },
     { id: Tab.LAUNCH, icon: Rocket, label: 'Launch' },
     { id: Tab.PORTFOLIO, icon: Briefcase, label: 'Portfolio' },

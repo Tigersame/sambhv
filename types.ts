@@ -1,6 +1,7 @@
 import React from 'react';
 
 export enum Tab {
+  SWAP = 'swap',
   EARN = 'earn',
   LAUNCH = 'launch',
   PORTFOLIO = 'portfolio',
@@ -14,6 +15,25 @@ export interface Token {
   price: number;
   change24h: number;
   icon: string;
+}
+
+export interface SwapToken {
+  symbol: string;
+  name: string;
+  address: string; // 0x... or "native"
+  decimals: number;
+  chainId: number;
+  logo?: string;
+  priceUsd?: number;
+  balance?: string; // formatted
+  tags?: ("hot" | "verified")[];
+}
+
+export interface TxItem {
+  hash: string;
+  title: string;
+  status: "pending" | "confirmed" | "failed";
+  timestamp: number;
 }
 
 export interface ChartPoint {
